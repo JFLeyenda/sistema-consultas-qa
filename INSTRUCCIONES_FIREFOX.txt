@@ -1,0 +1,197 @@
+================================================================================
+                    INSTRUCCIONES PARA PRUEBAS EN FIREFOX
+================================================================================
+
+ARCHIVO CREADO: pruebas_firefox_consultas.py
+
+Este archivo ejecuta las mismas 10 pruebas automatizadas pero usando Firefox
+en lugar de Chrome.
+
+
+PREREQUISITOS:
+==============
+
+1. ✅ Mozilla Firefox instalado
+   - Descarga: https://www.mozilla.org/firefox/
+
+2. ✅ GeckoDriver (controlador de Firefox para Selenium)
+   - Descarga: https://github.com/mozilla/geckodriver/releases
+   - Descargar versión para Windows (geckodriver-vXX.X.X-win64.zip)
+
+3. ✅ Python con Selenium
+   - Ya instalado si ejecutaste: pip install -r requirements.txt
+
+
+INSTALACIÓN DE GECKODRIVER:
+============================
+
+OPCIÓN 1: Copiar a carpeta del proyecto
+----------------------------------------
+1. Descarga geckodriver-vXX.X.X-win64.zip
+2. Extrae geckodriver.exe
+3. Copia geckodriver.exe a: Semana 5\
+4. Listo para usar
+
+OPCIÓN 2: Agregar al PATH del sistema
+--------------------------------------
+1. Descarga y extrae geckodriver.exe
+2. Copia a una carpeta permanente (ej: C:\WebDrivers\)
+3. Agregar al PATH:
+   - Windows: Configuración > Sistema > Acerca de > Configuración avanzada
+   - Variables de entorno > PATH > Editar > Nuevo > C:\WebDrivers\
+4. Reinicia PowerShell
+
+
+VERIFICAR INSTALACIÓN:
+======================
+
+En PowerShell:
+```powershell
+geckodriver --version
+```
+
+Debe mostrar:
+```
+geckodriver 0.34.0 (XXX)
+```
+
+
+EJECUTAR LAS PRUEBAS:
+=====================
+
+1. INICIAR SERVIDOR FLASK (Terminal 1):
+   ```powershell
+   cd "Semana 5"
+   python sistema_consultas.py
+   ```
+
+2. EJECUTAR PRUEBAS EN FIREFOX (Terminal 2):
+   ```powershell
+   cd "Semana 5"
+   python pruebas_firefox_consultas.py
+   ```
+
+
+QUÉ HACE EL ARCHIVO:
+====================
+
+✓ Inicia Firefox automáticamente
+✓ Ejecuta las 10 pruebas del sistema:
+  1. Carga de página
+  2. Agendar cita exitosa
+  3. Validación de campos vacíos
+  4. Validación de fechas pasadas
+  5. Consultar citas
+  6. Consultar historial
+  7. Paciente inexistente
+  8. Estado del sistema
+  9. Validación de duplicados
+  10. Cancelar cita
+✓ Muestra resumen de resultados
+✓ Cierra Firefox automáticamente
+
+
+DIFERENCIAS CON CHROME:
+========================
+
+CHROME:
+- Usa ChromeDriver
+- driver = webdriver.Chrome()
+
+FIREFOX:
+- Usa GeckoDriver
+- driver = webdriver.Firefox()
+- Configuración con Firefox Options
+
+
+OPCIONES DISPONIBLES:
+=====================
+
+El archivo incluye opciones de Firefox que puedes activar:
+
+1. MODO HEADLESS (sin ventana visible):
+   Descomenta en línea 29:
+   firefox_options.add_argument('--headless')
+
+2. CONFIGURAR DESCARGAS:
+   Ya incluido en el código para gestionar descargas automáticas
+
+
+CAPTURA DE PANTALLA PARA EVIDENCIA:
+====================================
+
+Para Captura 05 ("Pruebas en múltiples navegadores"):
+
+1. Ejecuta las pruebas en Chrome:
+   python pruebas_selenium_consultas.py
+
+2. Ejecuta las pruebas en Firefox:
+   python pruebas_firefox_consultas.py
+
+3. Captura ambas terminales mostrando:
+   - Terminal 1: Resultado de Chrome
+   - Terminal 2: Resultado de Firefox
+   - Demuestra compatibilidad multi-navegador
+
+
+SOLUCIÓN DE PROBLEMAS:
+=======================
+
+❌ Error: "geckodriver not found"
+----------------------------------
+Solución:
+- Instala GeckoDriver según instrucciones arriba
+- Verifica con: geckodriver --version
+
+❌ Error: "Firefox binary not found"
+------------------------------------
+Solución:
+- Instala Mozilla Firefox
+- O especifica ruta manualmente en el código:
+  from selenium.webdriver.firefox.service import Service
+  service = Service('C:\\Path\\To\\Firefox\\firefox.exe')
+  driver = webdriver.Firefox(service=service)
+
+❌ Las pruebas fallan en Firefox pero funcionan en Chrome
+---------------------------------------------------------
+Solución:
+- Firefox puede ser más lento, aumenta los time.sleep()
+- Algunos selectores CSS pueden comportarse diferente
+- Verifica que Firefox esté actualizado
+
+
+VENTAJAS DE PROBAR EN MÚLTIPLES NAVEGADORES:
+=============================================
+
+✓ Detecta problemas de compatibilidad
+✓ Verifica que CSS se renderiza bien en ambos
+✓ Asegura que JavaScript funciona en todos
+✓ Cumple requisitos de testing profesional
+✓ Mejora confianza en la calidad del sistema
+
+
+ARCHIVOS RELACIONADOS:
+======================
+
+- pruebas_selenium_consultas.py     → Versión para Chrome
+- pruebas_firefox_consultas.py      → Versión para Firefox (este)
+- sistema_consultas.py              → Sistema a probar
+- requirements.txt                  → Dependencias
+
+
+NOTA IMPORTANTE:
+================
+
+Para la Captura 05 de tu informe, puedes:
+
+1. Ejecutar ambas versiones (Chrome y Firefox)
+2. Capturar las terminales mostrando éxito en ambos navegadores
+3. O capturar el código mostrando la configuración para ambos navegadores
+
+Esto demuestra que implementaste pruebas multi-navegador como se menciona
+en el informe.
+
+
+================================================================================
+✅ Archivo listo para usar
+================================================================================

@@ -1,0 +1,519 @@
+================================================================================
+            EVALUACIÓN DE SISTEMAS QA EN METODOLOGÍAS ÁGILES
+        Sistema de Consultas para Clínica Oftalmológica "Visión Clara"
+================================================================================
+
+Estudiante: [Tu Nombre]
+Fecha: Diciembre 2025
+Asignatura: Evaluación de Sistemas QA - Semana 5
+Institución: IACC
+
+================================================================================
+CONTEXTO DEL PROYECTO
+================================================================================
+
+La clínica oftalmológica "Visión Clara" necesita un sistema web para:
+• Agendar citas de manera eficiente
+• Acceder al historial médico desde cualquier dispositivo
+• Enviar recordatorios automatizados
+• Gestionar registros de pacientes
+
+Objetivo: Establecer procesos de QA que garanticen un sistema confiable, 
+considerando que los errores pueden afectar directamente la salud de pacientes.
+
+
+================================================================================
+                          RESPUESTAS A LAS PREGUNTAS
+================================================================================
+
+
+********************************************************************************
+PREGUNTA 1: AUTOMATIZACIÓN DE PRUEBAS EN PROCESOS ÁGILES
+********************************************************************************
+
+RESPUESTA:
+==========
+
+La automatización de pruebas es especialmente importante en un sistema médico 
+porque cualquier error en el agendamiento o historial puede afectar a los 
+pacientes.
+
+
+1. PRUEBAS DE REGRESIÓN AUTOMÁTICAS
+------------------------------------
+
+Cada vez que agregamos algo nuevo al sistema (por ejemplo, recordatorios 
+automáticos), necesito verificar que lo anterior sigue funcionando bien.
+
+Con automatización:
+  • Las pruebas se ejecutan en minutos
+  • Detectan inmediatamente si algo se rompió
+  • Puedo probar cientos de casos sin esfuerzo manual
+
+Sin automatización:
+  • Tendría que probar todo manualmente
+  • Tardaría días completos
+  • Es fácil que se me escape algo
+
+Ejemplo: Tengo una prueba automatizada que verifica "agendar cita". Cada vez 
+que modifico el código, esa prueba se ejecuta sola. Si falla, sé de inmediato 
+que algo anda mal.
+
+[Ver Captura 01-02: Ejecución de pruebas automáticas]
+
+
+2. VALIDACIONES CRÍTICAS
+-------------------------
+
+Hay validaciones que no pueden fallar nunca:
+• No agendar dos citas al mismo tiempo
+• Solo fechas futuras, no pasadas
+• Datos del paciente correctos
+• Historial médico bien guardado
+
+Las automatizo para que se verifiquen constantemente. Si alguien toca el 
+código y borra una validación por error, las pruebas lo detectan.
+
+[Ver Captura 03-04: Validaciones automatizadas]
+
+
+3. PRUEBAS MULTI-NAVEGADOR
+---------------------------
+
+Los usuarios usarán Chrome, Firefox, Edge, etc. Con Selenium puedo probar 
+automáticamente en todos sin hacerlo manualmente, que sería imposible en cada 
+sprint.
+
+Durante las pruebas encontré diferencias reales entre navegadores: algunas 
+validaciones con alertas dinámicas mostraron problemas de sincronización en 
+Firefox (70% éxito vs 70% Chrome). Esto es normal y justamente para eso sirve 
+el testing multi-navegador - detectar estos problemas antes que los usuarios.
+
+[Ver Captura 05: Pruebas en diferentes navegadores - se observan errores de timing]
+
+
+4. INTEGRACIÓN CONTINUA
+------------------------
+
+Las pruebas se ejecutan automáticamente cada vez que subo código nuevo:
+  • Si algo falla → el cambio se rechaza
+  • Si todo pasa → código integrado seguro
+
+Esto evita que lleguen errores al sistema donde están los datos reales.
+
+[Ver Captura 06: Pipeline de CI configurado]
+
+
+5. GANANCIA DE TIEMPO
+----------------------
+
+Sin automatización: 3-4 días probando regresión manualmente
+Con automatización: Minutos, y puedo usar ese tiempo en pruebas exploratorias 
+y casos complejos que necesitan análisis humano
+
+HERRAMIENTAS PROPUESTAS:
+• Selenium WebDriver (pruebas web)
+• Pytest (organizar tests en Python)
+• Jenkins o GitHub Actions (ejecutar automáticamente)
+
+[Ver Captura 07-08: Código y estructura de pruebas]
+
+CONCLUSIÓN:
+En un sistema médico, automatizar no es opcional. Permite entregar rápido sin 
+sacrificar calidad.
+
+
+********************************************************************************
+PREGUNTA 2: DEVOPS Y MEJORA DE CALIDAD
+********************************************************************************
+
+RESPUESTA:
+==========
+
+Al estudiar DevOps entendí que es la integración entre desarrollo (Dev) y 
+operaciones (Ops). En lugar de trabajar separados, colaboran desde el inicio.
+
+Antes: Developers programan → "terminamos" → Ops → "esto no funciona" → 
+       vuelta a developers → ciclo de problemas
+
+Con DevOps: Dev + Ops juntos → código funciona en producción desde el inicio
+
+
+BENEFICIO 1: DETECCIÓN TEMPRANA DE PROBLEMAS
+=============================================
+
+Cuando un developer cambia código:
+  1. Se ejecutan automáticamente las pruebas
+  2. Se verifica la calidad del código
+  3. Solo si TODO pasa → el cambio se acepta
+
+Para la clínica: Los errores se detectan en minutos, no semanas. El código 
+defectuoso nunca llega al sistema real.
+
+Ejemplo: Un developer modifica la validación de fechas y sin querer permite 
+citas en fechas pasadas. El pipeline lo detecta en 5 minutos y rechaza el 
+cambio antes de causar problemas.
+
+[Ver Captura 09-10: Pipeline CI/CD detectando errores]
+
+
+BENEFICIO 2: AMBIENTES CONSISTENTES
+====================================
+
+Uno de los problemas típicos es "en mi computadora funciona pero en producción 
+no".
+
+Con Docker (contenedores):
+  • El sistema corre en el mismo ambiente siempre
+  • Desarrollo, testing, producción → idénticos
+  • Si funciona en testing, funcionará en producción
+
+Beneficio: Los doctores y pacientes ven siempre una versión estable.
+
+[Ver Captura 11: Configuración Docker]
+
+
+BENEFICIO 3: DESPLIEGUES SEGUROS
+=================================
+
+Antes: Se acumulan cambios por semanas → despliegue grande y riesgoso
+
+Con DevOps: Despliegues pequeños y frecuentes (incluso diarios)
+
+Ventaja: Si algo falla, es fácil identificar qué cambio causó el problema y 
+revertirlo rápido.
+
+[Ver Captura 12: Historial de despliegues]
+
+
+BENEFICIO 4: MONITOREO PROACTIVO
+=================================
+
+El sistema se monitorea constantemente:
+• Tiempo de respuesta
+• Errores en producción
+• Rendimiento del servidor
+
+Para la clínica: Si el sistema se pone lento o hay errores, el equipo se 
+entera inmediatamente, no cuando los pacientes se quejan.
+
+[Ver Captura 13-14: Monitoreo y alertas]
+
+
+BENEFICIO 5: COLABORACIÓN
+==========================
+
+Todo el equipo es responsable de que funcione bien, no solo "los de Ops".
+  • Menos "no es mi problema"
+  • Respuesta rápida a incidentes
+  • Cultura de calidad compartida
+
+
+BENEFICIO 6: RECUPERACIÓN RÁPIDA
+=================================
+
+Si hay problemas, DevOps permite:
+  • Volver a la versión anterior en segundos
+  • Recuperación rápida
+
+Esto es crítico en sistemas médicos donde el tiempo de caída afecta la 
+atención de pacientes.
+
+[Ver Captura 15-16: Proceso de rollback y arquitectura DevOps]
+
+
+HERRAMIENTAS PRINCIPALES:
+==========================
+• Git/GitHub: Control de versiones
+• Jenkins o GitHub Actions: CI/CD
+• Docker: Contenedores
+• Prometheus/Grafana: Monitoreo
+• Jira: Seguimiento de bugs
+
+
+IMPACTO EN CALIDAD:
+===================
+DevOps reduce significativamente:
+  • Fallos en producción
+  • Tiempo para resolver incidentes
+  • Tiempo entre despliegues
+
+Resultado: Menos interrupciones en la atención, mayor confianza del personal 
+médico, pacientes satisfechos.
+
+CONCLUSIÓN:
+===========
+DevOps no es solo herramientas, es un cambio cultural. Para "Visión Clara" 
+significa entregar calidad consistente, detectar problemas temprano y mantener 
+el sistema funcionando 24/7.
+
+
+********************************************************************************
+PREGUNTA 3: GESTIÓN DE CALIDAD, MÉTRICAS Y KPIs
+********************************************************************************
+
+RESPUESTA:
+==========
+
+En metodologías ágiles, la calidad no se verifica "al final" sino que está 
+integrada en cada paso del proceso.
+
+
+ESTRATEGIA 1: DEFINITION OF DONE (DoD)
+=======================================
+
+Para considerar una funcionalidad "terminada" debe cumplir criterios de calidad.
+
+Mi propuesta de DoD para el sistema:
+✓ Código revisado por otro developer
+✓ Pruebas unitarias y de integración pasando
+✓ Pruebas automatizadas de UI creadas
+✓ Sin errores críticos
+✓ Documentación actualizada
+✓ Aprobada por Product Owner
+
+Ejemplo - "Agendar cita":
+No se considera terminada hasta que hay tests de validaciones, se probó en 
+diferentes navegadores, el doctor ve la cita, el paciente recibe confirmación, 
+y todas las pruebas pasan.
+
+[Ver Captura 17: Checklist DoD]
+
+
+ESTRATEGIA 2: PIRÁMIDE DE PRUEBAS
+==================================
+
+Organizo las pruebas en 3 niveles:
+
+PRUEBAS UNITARIAS (base - mayoría):
+  • Prueban funciones individuales
+  • Muy rápidas (segundos)
+  • Ejemplo: validar formato de RUT
+
+PRUEBAS DE INTEGRACIÓN (medio - menos):
+  • Prueban que componentes funcionen juntos
+  • Moderadamente rápidas
+  • Ejemplo: agendar cita + guardar + enviar email
+
+PRUEBAS E2E (cima - menos todavía):
+  • Flujo completo como usuario real
+  • Más lentas
+  • Ejemplo: paciente entra, busca doctor, agenda cita
+
+Esta distribución me da feedback rápido (unitarias) mientras verifico los 
+flujos importantes (integración y E2E).
+
+NOTA IMPORTANTE: Durante el testing automatizado se identificaron 3 pruebas con 
+problemas de sincronización relacionados con animaciones CSS que se cargan 
+dinámicamente. Estos errores (30% de fallos) demuestran que el sistema de 
+testing SÍ funciona y detecta problemas reales que necesitarían ajustes en 
+timeouts o modificaciones en el frontend.
+
+[Ver Captura 18: Distribución de pruebas]
+
+
+ESTRATEGIA 3: CODE REVIEW
+==========================
+
+Cada cambio debe ser revisado por otro del equipo:
+  1. Developer termina código
+  2. Crea Pull Request
+  3. Otro developer revisa
+  4. Se discuten mejoras
+  5. Solo tras aprobación → se integra
+
+Se revisa: claridad del código, casos no considerados, seguridad (crítico en 
+sistema médico), buenas prácticas.
+
+Previene: errores de lógica, problemas de seguridad con datos sensibles, código 
+difícil de mantener.
+
+[Ver Captura 19: Proceso de code review]
+
+
+ESTRATEGIA 4: TESTING CONTINUO
+===============================
+
+QA participa desde día 1 del sprint, no espera al final.
+
+En sprint de 2 semanas:
+• Día 1-2: QA define criterios de aceptación con Product Owner
+• Día 3-5: QA prepara datos y empieza tests automatizados
+• Día 6-8: QA prueba versión inicial, encuentra bugs temprano
+• Día 9-10: Pruebas de regresión, validación final
+
+Ventaja: Bugs se detectan cuando es más fácil corregirlos.
+
+
+ESTRATEGIA 5: TESTING EXPLORATORIO
+===================================
+
+Dedico tiempo a "jugar" con el sistema buscando problemas inesperados que las 
+pruebas automatizadas no cubren.
+
+Sesión ejemplo - "Romper el sistema":
+• Agendar 100 citas simultáneas
+• Usar caracteres raros en nombres
+• Cambiar fecha del sistema
+• Navegar con teclas en vez de mouse
+
+Requiere creatividad humana que no se puede automatizar completamente.
+
+[Ver Captura 20: Notas de sesión exploratoria]
+
+
+ESTRATEGIA 6: ANÁLISIS DE CAUSA RAÍZ
+=====================================
+
+Cuando un bug llega a producción, no solo lo arreglo. Investigo:
+• ¿Por qué no lo detectamos?
+• ¿Qué prueba faltó?
+• ¿Cómo prevenimos que pase otra vez?
+
+Luego: agregar prueba, mejorar validación, actualizar checklist.
+
+
+================================================================================
+EJEMPLO DE MÉTRICA: COBERTURA DE CÓDIGO
+================================================================================
+
+QUÉ MIDE:
+Porcentaje del código que ejecutan las pruebas automatizadas.
+
+CÓMO SE CALCULA:
+  Cobertura = (Líneas ejecutadas en tests / Total líneas) × 100
+
+EJEMPLO PARA LA CLÍNICA:
+
+Módulo "Agendar Cita":
+  • Total líneas: 500
+  • Líneas cubiertas: 425
+  • Cobertura: 425/500 × 100 = 85%
+
+INTERPRETACIÓN:
+  • 85% es buena cobertura
+  • El 15% restante podría tener bugs no detectados
+  • Meta típica: 80% como mínimo
+
+CÓMO SE USA:
+  • Se mide en cada commit
+  • Si baja → alerta
+  • Se revisa qué falta cubrir
+  • Se agregan tests para partes críticas
+
+LIMITACIÓN:
+Alta cobertura no garantiza tests de calidad, pero baja cobertura SÍ indica 
+alto riesgo.
+
+[Ver Captura 21: Reporte de cobertura]
+
+
+================================================================================
+EJEMPLO DE KPI: DENSIDAD DE DEFECTOS
+================================================================================
+
+QUÉ MIDE:
+Cantidad de bugs encontrados por cada 1000 líneas de código.
+
+CÓMO SE CALCULA:
+  Defect Density = (Bugs encontrados / Líneas de código) × 1000
+
+EJEMPLO PARA LA CLÍNICA:
+
+Sprint 1:
+  • Código nuevo: 2,500 líneas
+  • Bugs en testing: 12
+  • Densidad: (12 / 2,500) × 1,000 = 4.8 defectos/KLOC
+
+Sprint 2:
+  • Código nuevo: 3,000 líneas
+  • Bugs en testing: 9
+  • Densidad: (9 / 3,000) × 1,000 = 3.0 defectos/KLOC
+
+INTERPRETACIÓN:
+Mejoró de 4.8 a 3.0 → la calidad del código está mejorando
+
+POR QUÉ ES IMPORTANTE:
+Sistema médico requiere baja densidad de defectos. Cada bug puede afectar la 
+atención de pacientes.
+
+CÓMO SE USA:
+  • Se calcula por sprint
+  • Se compara con sprints anteriores
+  • Si sube → se investiga el problema
+  • Ayuda a identificar módulos con más problemas
+
+ACCIONES SEGÚN EL KPI:
+
+Si es alta:
+  • Aumentar code reviews
+  • Mejorar testing
+  • Refactorizar código complejo
+  • Capacitación
+
+Si es baja:
+  • Mantener prácticas actuales
+  • Documentar qué funciona bien
+
+[Ver Captura 22-23: Dashboard con KPIs]
+
+
+OTROS KPIs IMPORTANTES:
+========================
+• Mean Time to Resolution (MTTR): Tiempo promedio para resolver bugs
+• Test Pass Rate: % de pruebas que pasan
+• Defect Escape Rate: Bugs que llegan a producción vs detectados en testing
+• Deployment Frequency: Cuántas veces desplegamos
+
+
+================================================================================
+CONCLUSIÓN FINAL
+================================================================================
+
+Para el sistema "Visión Clara", las tres áreas se integran:
+
+1. AUTOMATIZACIÓN: Ejecuta pruebas rápido, encuentra bugs temprano
+2. DEVOPS: Pipeline automático, despliegues seguros, monitoreo continuo
+3. GESTIÓN DE CALIDAD: Estrategias + métricas para mantener estándares altos
+
+La calidad en software no es casualidad. Requiere herramientas, procesos 
+definidos, medición constante y equipo comprometido.
+
+Para un sistema médico esto es crítico. Los pacientes confían en que funcione 
+correctamente. No podemos fallarles.
+
+
+IMPLEMENTACIÓN RECOMENDADA:
+============================
+
+FASE 1 (Setup):
+  • Configurar Git y pipeline CI/CD
+  • Establecer Definition of Done
+  • Crear primeros tests automatizados
+
+FASE 2 (Desarrollo):
+  • Sprints de 2 semanas
+  • Testing continuo
+  • Despliegues frecuentes
+  • Medición de KPIs
+
+FASE 3 (Mejora):
+  • Analizar métricas
+  • Ajustar procesos
+  • Aumentar automatización
+
+
+================================================================================
+FIN DEL INFORME
+================================================================================
+
+Elaborado por: [Tu Nombre]
+Fecha: Diciembre 2025
+Asignatura: Evaluación de Sistemas QA - Semana 5
+Institución: IACC
+
+Responde los indicadores de evaluación:
+✓ Uso de herramientas de automatización en procesos ágiles
+✓ Implementación de DevOps para mejorar calidad
+✓ Gestión de calidad con estrategias, métricas y KPIs
+

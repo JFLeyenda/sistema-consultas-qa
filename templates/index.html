@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Consultas - Clínica Visión Clara</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab-button {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab-button:hover {
+            color: #667eea;
+        }
+        
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert.success {
+            background-color: #d4edda;
+            border: 2px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .alert.error {
+            background-color: #f8d7da;
+            border: 2px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .citas-list {
+            margin-top: 20px;
+        }
+        
+        .cita-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .cita-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .cita-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .cita-info-item {
+            font-size: 0.95em;
+        }
+        
+        .cita-info-item strong {
+            color: #333;
+        }
+        
+        .estado-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        .estado-agendada {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .estado-cancelada {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .btn-cancelar {
+            background: #dc3545;
+            padding: 8px 20px;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        .historial-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .historial-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .sistema-estado {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .sistema-estado h3 {
+            margin-bottom: 15px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+            }
+            
+            .tab-button {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>👁️ Clínica Visión Clara</h1>
+            <p class="subtitle">Sistema de Gestión de Consultas Oftalmológicas</p>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab-button active" onclick="cambiarTab('agendar')">📅 Agendar Cita</button>
+            <button class="tab-button" onclick="cambiarTab('consultar')">🔍 Consultar Citas</button>
+            <button class="tab-button" onclick="cambiarTab('historial')">📋 Historial Médico</button>
+            <button class="tab-button" onclick="cambiarTab('estado')">⚙️ Estado del Sistema</button>
+        </div>
+        
+        <!-- TAB: Agendar Cita -->
+        <div id="tab-agendar" class="tab-content active">
+            <h2>📅 Agendar Nueva Cita</h2>
+            
+            <div id="alert-agendar" class="alert"></div>
+            
+            <form id="form-agendar" onsubmit="agendarCita(event)">
+                <div class="form-group">
+                    <label for="rut-paciente">RUT del Paciente *</label>
+                    <input type="text" id="rut-paciente" placeholder="Ej: 12345678-9" required>
+                    <small style="color: #666;">Pacientes registrados: 12345678-9 (Juan Pérez), 98765432-1 (Ana Silva)</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="doctor">Doctor *</label>
+                    <select id="doctor" required>
+                        <option value="">Seleccione un doctor</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fecha">Fecha de la Cita *</label>
+                    <input type="date" id="fecha" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="hora">Hora *</label>
+                    <input type="time" id="hora" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tipo-consulta">Tipo de Consulta *</label>
+                    <select id="tipo-consulta" required>
+                        <option value="">Seleccione el tipo</option>
+                        <option value="Control de rutina">Control de rutina</option>
+                        <option value="Examen de vista">Examen de vista</option>
+                        <option value="Examen de fondo de ojo">Examen de fondo de ojo</option>
+                        <option value="Cirugía refractiva">Cirugía refractiva</option>
+                        <option value="Urgencia">Urgencia</option>
+                    </select>
+                </div>
+                
+                <button type="submit">Agendar Cita</button>
+            </form>
+        </div>
+        
+        <!-- TAB: Consultar Citas -->
+        <div id="tab-consultar" class="tab-content">
+            <h2>🔍 Consultar Citas</h2>
+            
+            <div class="form-group">
+                <label for="rut-consulta">RUT del Paciente (dejar vacío para ver todas)</label>
+                <input type="text" id="rut-consulta" placeholder="Ej: 12345678-9">
+            </div>
+            
+            <button onclick="consultarCitas()">Buscar Citas</button>
+            
+            <div id="citas-list" class="citas-list"></div>
+        </div>
+        
+        <!-- TAB: Historial Médico -->
+        <div id="tab-historial" class="tab-content">
+            <h2>📋 Historial Médico del Paciente</h2>
+            
+            <div class="form-group">
+                <label for="rut-historial">RUT del Paciente *</label>
+                <input type="text" id="rut-historial" placeholder="Ej: 12345678-9">
+            </div>
+            
+            <button onclick="consultarHistorial()">Ver Historial</button>
+            
+            <div id="historial-container"></div>
+        </div>
+        
+        <!-- TAB: Estado del Sistema -->
+        <div id="tab-estado" class="tab-content">
+            <h2>⚙️ Estado del Sistema</h2>
+            
+            <button onclick="actualizarEstado()">Actualizar Estado</button>
+            
+            <div id="estado-container"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Cargar doctores al iniciar
+        window.onload = function() {
+            cargarDoctores();
+            establecerFechaMinima();
+        };
+        
+        function cambiarTab(tabName) {
+            // Ocultar todos los tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Desactivar todos los botones
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Activar el tab seleccionado
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function establecerFechaMinima() {
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha').setAttribute('min', hoy);
+        }
+        
+        async function cargarDoctores() {
+            try {
+                const response = await fetch('/api/doctores');
+                const doctores = await response.json();
+                
+                const select = document.getElementById('doctor');
+                doctores.forEach(doctor => {
+                    const option = document.createElement('option');
+                    option.value = doctor.id;
+                    option.textContent = `${doctor.nombre} - ${doctor.especialidad}`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error al cargar doctores:', error);
+            }
+        }
+        
+        async function agendarCita(event) {
+            event.preventDefault();
+            
+            const alertDiv = document.getElementById('alert-agendar');
+            const form = document.getElementById('form-agendar');
+            
+            const datos = {
+                rut_paciente: document.getElementById('rut-paciente').value,
+                doctor_id: document.getElementById('doctor').value,
+                fecha: document.getElementById('fecha').value,
+                hora: document.getElementById('hora').value,
+                tipo_consulta: document.getElementById('tipo-consulta').value
+            };
+            
+            try {
+                const response = await fetch('/api/agendar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(datos)
+                });
+                
+                const resultado = await response.json();
+                
+                if (response.ok) {
+                    mostrarAlerta('alert-agendar', 'success', '✅ ' + resultado.mensaje);
+                    form.reset();
+                } else {
+                    mostrarAlerta('alert-agendar', 'error', '❌ ' + resultado.error);
+                }
+            } catch (error) {
+                mostrarAlerta('alert-agendar', 'error', '❌ Error de conexión: ' + error.message);
+            }
+        }
+        
+        async function consultarCitas() {
+            const rut = document.getElementById('rut-consulta').value;
+            const url = rut ? `/api/citas/${rut}` : '/api/citas';
+            
+            try {
+                const response = await fetch(url);
+                const citas = await response.json();
+                
+                const container = document.getElementById('citas-list');
+                
+                if (citas.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No se encontraron citas.</p>';
+                    return;
+                }
+                
+                container.innerHTML = citas.map(cita => `
+                    <div class="cita-card">
+                        <h3>Cita #${cita.id}</h3>
+                        <div class="cita-info">
+                            <div class="cita-info-item">
+                                <strong>Paciente:</strong><br>${cita.nombre_paciente}
+                            </div>
+                            <div class="cita-info-item">
+                                <strong>Doctor:</strong><br>${cita.nombre_doctor}
+                            </div>
+                            <div class="cita-info-item">
+                                <strong>Fecha:</strong><br>${cita.fecha}
+                            </div>
+                            <div class="cita-info-item">
+                                <strong>Hora:</strong><br>${cita.hora}
+                            </div>
+                            <div class="cita-info-item">
+                                <strong>Tipo:</strong><br>${cita.tipo_consulta}
+                            </div>
+                        </div>
+                        <span class="estado-badge estado-${cita.estado.toLowerCase()}">${cita.estado}</span>
+                        ${cita.estado === 'Agendada' ? `<button class="btn-cancelar" onclick="cancelarCita(${cita.id})">Cancelar Cita</button>` : ''}
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error al consultar citas:', error);
+            }
+        }
+        
+        async function cancelarCita(citaId) {
+            if (!confirm('¿Está seguro de que desea cancelar esta cita?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/cancelar/${citaId}`, {
+                    method: 'POST'
+                });
+                
+                const resultado = await response.json();
+                
+                if (response.ok) {
+                    alert('✅ ' + resultado.mensaje);
+                    consultarCitas();
+                } else {
+                    alert('❌ ' + resultado.error);
+                }
+            } catch (error) {
+                alert('❌ Error de conexión: ' + error.message);
+            }
+        }
+        
+        async function consultarHistorial() {
+            const rut = document.getElementById('rut-historial').value;
+            
+            if (!rut) {
+                alert('Por favor ingrese un RUT');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/paciente/${rut}`);
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    document.getElementById('historial-container').innerHTML = 
+                        `<p style="text-align: center; color: #721c24; padding: 20px;">❌ ${error.error}</p>`;
+                    return;
+                }
+                
+                const paciente = await response.json();
+                
+                let html = `
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">Información del Paciente</h3>
+                        <p><strong>Nombre:</strong> ${paciente.nombre}</p>
+                        <p><strong>RUT:</strong> ${paciente.rut}</p>
+                        <p><strong>Email:</strong> ${paciente.email}</p>
+                        <p><strong>Teléfono:</strong> ${paciente.telefono}</p>
+                    </div>
+                    
+                    <h3 style="margin: 20px 0;">Historial de Consultas</h3>
+                `;
+                
+                paciente.historial.forEach(consulta => {
+                    html += `
+                        <div class="historial-item">
+                            <h4>📅 ${consulta.fecha}</h4>
+                            <p><strong>Tipo:</strong> ${consulta.tipo}</p>
+                            <p><strong>Diagnóstico:</strong> ${consulta.diagnostico}</p>
+                            <p><strong>Doctor:</strong> ${consulta.doctor}</p>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('historial-container').innerHTML = html;
+            } catch (error) {
+                console.error('Error al consultar historial:', error);
+                document.getElementById('historial-container').innerHTML = 
+                    `<p style="text-align: center; color: #721c24; padding: 20px;">❌ Error de conexión</p>`;
+            }
+        }
+        
+        async function actualizarEstado() {
+            try {
+                const response = await fetch('/api/estado');
+                const estado = await response.json();
+                
+                const html = `
+                    <div class="sistema-estado">
+                        <h3>Estado Actual del Sistema</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value">${estado.pacientes_registrados}</div>
+                                <div class="stat-label">Pacientes Registrados</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${estado.doctores_disponibles}</div>
+                                <div class="stat-label">Doctores Disponibles</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${estado.citas_agendadas}</div>
+                                <div class="stat-label">Citas Agendadas</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${estado.estado}</div>
+                                <div class="stat-label">Estado del Sistema</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 15px; opacity: 0.9;">
+                            <strong>Última actualización:</strong> ${estado.timestamp}
+                        </p>
+                    </div>
+                `;
+                
+                document.getElementById('estado-container').innerHTML = html;
+            } catch (error) {
+                console.error('Error al actualizar estado:', error);
+            }
+        }
+        
+        function mostrarAlerta(id, tipo, mensaje) {
+            const alertDiv = document.getElementById(id);
+            alertDiv.className = `alert ${tipo} show`;
+            alertDiv.textContent = mensaje;
+            
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

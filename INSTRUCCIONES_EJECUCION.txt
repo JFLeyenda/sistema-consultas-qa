@@ -1,0 +1,303 @@
+================================================================================
+                    INSTRUCCIONES DE EJECUCIÓN
+                    Sistema de Consultas Oftalmológicas
+                    Clínica "Visión Clara"
+================================================================================
+
+Este documento explica cómo ejecutar el sistema completo paso a paso.
+
+================================================================================
+                    PREREQUISITOS
+================================================================================
+
+Antes de comenzar, asegúrese de tener instalado:
+
+1. ✅ Python 3.12 (desde Microsoft Store o python.org)
+2. ✅ Navegador Google Chrome (versión actualizada)
+3. ✅ ChromeDriver compatible con su versión de Chrome
+4. ✅ Visual Studio Code (opcional, para editar código)
+
+================================================================================
+                    PASO 1: INSTALAR DEPENDENCIAS
+================================================================================
+
+1. Abra PowerShell (Terminal en VS Code)
+
+2. Navegue a la carpeta Semana 5:
+   
+   cd "c:\ProyectosIACC\Evaluacion de sist QA\Semana 5"
+
+3. Instale las dependencias de Python:
+   
+   pip install -r requirements.txt
+
+4. Verifique que se instalaron correctamente:
+   
+   pip list
+   
+   Debe ver:
+   - Flask 3.0.0
+   - selenium 4.15.0
+
+
+================================================================================
+                    PASO 2: DESCARGAR CHROMEDRIVER
+================================================================================
+
+1. Verifique la versión de su Chrome:
+   - Abra Chrome
+   - Vaya a: chrome://settings/help
+   - Anote la versión (ejemplo: 120.0.6099.109)
+
+2. Descargue ChromeDriver:
+   - Vaya a: https://googlechromelabs.github.io/chrome-for-testing/
+   - Descargue la versión que coincida con su Chrome
+   - Descargue la versión "win64" para Windows
+
+3. Extraiga el archivo ZIP:
+   - Extraiga chromedriver.exe
+   - Colóquelo en: Semana 5\chromedriver-win64\
+
+4. Agregue a la variable PATH (temporal):
+   En PowerShell:
+   
+   $env:PATH += ";$PWD\chromedriver-win64"
+
+
+================================================================================
+                    PASO 3: EJECUTAR EL SISTEMA
+================================================================================
+
+OPCIÓN A: Ejecución Manual (2 Terminales)
+------------------------------------------
+
+🖥️ TERMINAL 1 - Servidor Flask:
+
+1. Abra una terminal PowerShell
+2. Navegue a la carpeta Semana 5
+3. Ejecute:
+   
+   python sistema_consultas.py
+
+4. Debe ver:
+   
+   ================================================================================
+   SISTEMA DE CONSULTAS OFTALMOLÓGICAS - CLÍNICA VISIÓN CLARA
+   ================================================================================
+   Servidor iniciando en: http://localhost:5000
+   Presiona CTRL+C para detener
+   ================================================================================
+
+5. ¡NO CIERRE ESTA TERMINAL! Déjela corriendo
+
+
+🖥️ TERMINAL 2 - Navegador Web:
+
+1. Abra su navegador Chrome
+2. Vaya a: http://localhost:5000
+3. Debería ver el sistema de consultas funcionando
+
+
+OPCIÓN B: Ejecutar Pruebas Automatizadas (2 Terminales)
+-------------------------------------------------------
+
+🖥️ TERMINAL 1 - Servidor Flask:
+
+1. Ejecute (igual que OPCIÓN A):
+   
+   python sistema_consultas.py
+
+
+🖥️ TERMINAL 2 - Pruebas Selenium:
+
+1. Abra otra terminal PowerShell
+2. Navegue a la carpeta Semana 5
+3. Ejecute:
+   
+   python pruebas_selenium_consultas.py
+
+4. Verá las 10 pruebas ejecutándose automáticamente
+5. El navegador se abrirá y cerrará automáticamente
+6. Al final verá el resumen:
+   
+   ================================================================================
+     RESUMEN DE PRUEBAS
+   ================================================================================
+     ✅ Pruebas exitosas: 10
+     ❌ Pruebas fallidas: 0
+     📊 Total de pruebas: 10
+     📈 Tasa de éxito: 100.0%
+   ================================================================================
+
+
+================================================================================
+                    PASO 4: USO DEL SISTEMA (Manual)
+================================================================================
+
+Una vez que el servidor esté corriendo (http://localhost:5000):
+
+📅 AGENDAR UNA CITA:
+-------------------
+1. Use la pestaña "Agendar Cita"
+2. Complete el formulario:
+   - RUT: 12345678-9 o 98765432-1 (pacientes de ejemplo)
+   - Doctor: Seleccione uno de la lista
+   - Fecha: Seleccione una fecha futura
+   - Hora: Ingrese hora en formato 24h (ejemplo: 10:30)
+   - Tipo: Seleccione el tipo de consulta
+3. Click en "Agendar Cita"
+4. Verá mensaje de confirmación en verde
+
+🔍 CONSULTAR CITAS:
+------------------
+1. Click en pestaña "Consultar Citas"
+2. Puede dejar el RUT vacío (ver todas) o ingresar un RUT específico
+3. Click en "Buscar Citas"
+4. Verá la lista de citas agendadas
+5. Puede cancelar citas desde aquí
+
+📋 VER HISTORIAL MÉDICO:
+------------------------
+1. Click en pestaña "Historial Médico"
+2. Ingrese RUT: 12345678-9 o 98765432-1
+3. Click en "Ver Historial"
+4. Verá el historial de consultas previas
+
+⚙️ ESTADO DEL SISTEMA:
+----------------------
+1. Click en pestaña "Estado del Sistema"
+2. Click en "Actualizar Estado"
+3. Verá estadísticas del sistema
+
+
+================================================================================
+                    PASO 5: GENERAR CAPTURAS
+================================================================================
+
+Para generar las 23 capturas solicitadas:
+
+1. Lea detenidamente: GUIA_CAPTURAS.txt
+
+2. Siga las instrucciones paso a paso
+
+3. Guarde cada captura en: Semana 5\capturas\
+   - Nombres: Captura01.png, Captura02.png, ..., Captura23.png
+
+4. Algunas capturas requieren crear archivos adicionales:
+   - Dockerfile
+   - docker-compose.yml
+   - Archivos de métricas y KPIs
+   (Todos están detallados en la guía)
+
+
+================================================================================
+                    SOLUCIÓN DE PROBLEMAS
+================================================================================
+
+❌ Error: "No se encuentra el módulo Flask"
+-------------------------------------------
+Solución:
+pip install Flask==3.0.0
+
+
+❌ Error: "No se encuentra ChromeDriver"
+---------------------------------------
+Solución:
+1. Verifique que chromedriver.exe esté en la carpeta correcta
+2. Agregue a PATH o colóquelo en la carpeta Semana 5
+3. Verifique que la versión coincida con su Chrome
+
+
+❌ Error: "Puerto 5000 ya está en uso"
+--------------------------------------
+Solución:
+1. Cierre otros procesos que usen el puerto 5000
+2. O modifique el puerto en sistema_consultas.py:
+   app.run(debug=True, port=5001)  # Cambiar a 5001
+
+
+❌ Error: "Las pruebas fallan"
+-----------------------------
+Solución:
+1. Asegúrese de que el servidor Flask esté corriendo PRIMERO
+2. Espere 3-5 segundos después de iniciar Flask
+3. Verifique que http://localhost:5000 funciona en el navegador
+4. Cierre otros navegadores Chrome abiertos
+
+
+❌ Error: "Paciente no encontrado"
+----------------------------------
+Solución:
+Use solo estos RUTs de ejemplo:
+- 12345678-9 (Juan Pérez)
+- 98765432-1 (Ana Silva)
+
+
+❌ Error: "Fecha inválida"
+--------------------------
+Solución:
+La fecha debe ser futura (posterior a hoy).
+Use formato: YYYY-MM-DD en el campo de fecha.
+
+
+================================================================================
+                    COMANDOS ÚTILES
+================================================================================
+
+# Ver versión de Python
+python --version
+
+# Ver paquetes instalados
+pip list
+
+# Reinstalar dependencias
+pip install --upgrade -r requirements.txt
+
+# Limpiar caché de Python
+pip cache purge
+
+# Ver procesos usando puerto 5000
+netstat -ano | findstr :5000
+
+# Detener servidor Flask
+CTRL + C (en la terminal donde corre)
+
+
+================================================================================
+                    ESTRUCTURA DE ARCHIVOS
+================================================================================
+
+Semana 5/
+├── sistema_consultas.py          ← Servidor Flask principal
+├── pruebas_selenium_consultas.py ← Pruebas automatizadas
+├── requirements.txt              ← Dependencias
+├── Informe_Tarea_Semana5.txt     ← Informe completo
+├── GUIA_CAPTURAS.txt             ← Guía de evidencias
+├── INSTRUCCIONES_EJECUCION.txt   ← Este archivo
+├── templates/
+│   └── index.html                ← Interfaz web
+├── capturas/                     ← Aquí van las 23 capturas
+└── chromedriver-win64/           ← ChromeDriver
+
+
+================================================================================
+                    CONTACTO Y SOPORTE
+================================================================================
+
+Si tiene problemas:
+
+1. Revise este documento completo
+2. Lea los mensajes de error detenidamente
+3. Verifique que todos los prerequisitos estén instalados
+4. Consulte GUIA_CAPTURAS.txt para instrucciones específicas
+
+================================================================================
+
+✅ ¡Sistema listo para usar!
+
+Recuerde:
+- Primero inicie el servidor Flask
+- Luego abra el navegador o ejecute pruebas
+- Siga la guía de capturas para las evidencias
+
+================================================================================
