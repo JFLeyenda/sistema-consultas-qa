@@ -405,6 +405,10 @@ if __name__ == "__main__":
     print("  3. Mozilla Firefox esté instalado")
     print("="*80)
     
-    input("\nPresione ENTER para iniciar las pruebas en Firefox...")
+    # En CI/CD (GitHub Actions), no esperar input del usuario
+    if not os.getenv('CI'):
+        input("\nPresione ENTER para iniciar las pruebas en Firefox...")
+    else:
+        print("\n[CI Mode] Iniciando pruebas en Firefox automáticamente...")
     
     ejecutar_todas_las_pruebas()

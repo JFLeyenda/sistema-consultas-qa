@@ -12,6 +12,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 import time
+import os
 
 
 def iniciar_driver():
@@ -392,6 +393,10 @@ if __name__ == "__main__":
     print("  en http://localhost:5000 antes de continuar")
     print("="*80)
     
-    input("\nPresione ENTER para iniciar las pruebas...")
+    # En CI/CD (GitHub Actions), no esperar input del usuario
+    if not os.getenv('CI'):
+        input("\nPresione ENTER para iniciar las pruebas...")
+    else:
+        print("\n[CI Mode] Iniciando pruebas automáticamente...")
     
     ejecutar_todas_las_pruebas()
