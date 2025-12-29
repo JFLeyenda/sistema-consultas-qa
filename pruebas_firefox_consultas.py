@@ -14,6 +14,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
 import time
+import os
 
 
 def iniciar_driver():
